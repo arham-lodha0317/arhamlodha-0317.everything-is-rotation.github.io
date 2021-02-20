@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fourier Series</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+
+    <script src="waveSketch.js"></script>
+    <script src="fourier.js"></script>
+    <script src="PointProcessing"></script>
+
+    <script src="complexFourier.js"></script>
+    <script src="default.js"></script>
+    <script src="PointProcessing.js"></script>
+
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      canvas {
+        margin: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+
+
+    <div id="fourier" class="jumbotron">
+      <h1>Everything is a Rotation</h1>
+    </div>
+
+    <div id="intro">
+      <div class="container">
+        <h2>Introduction</h2>
+        <p>
+          Fourier Transform is a mathematical tool created by Joseph Fourier.
+          Fourier Series and Transform has massive applications in math,
+          science, and computer science, specifically in signal processing. At
+          the end of this demonstration you have a good idea about:
+        </p>
+        <ol>
+          <strong>
+            <li>What the Fourier Transform does</li>
+            <li>Some practical applications of the Fourier Transform</li>
+            <li>Some pointless but awesome uses of the Fourier Transform</li>
+          </strong>
+        </ol>
+
+        <h3>Why was the Fourier Series created?</h3>
+        <p>
+          Jean Baptiste Joseph Fourier made significant contributions to the
+          study of trigonometric series. He introduced the topic of Fourier
+          series in the discussion of the heat equation in physics. The heat
+          equation is a partial differential equation, which didn’t have a
+          general solution until fourier but some specific solutions to it were
+          known such as the solutions to sines and cosine waves. So Fourier
+          proposed that if they represented a given function as a sum of sines
+          and cosines they would be able to find a general solution for the heat
+          equation because they could just apply the solutions from the
+          previously known solutions of sines and cosines to find the general
+          solution of any given function.
+        </p>
+        <p>
+          But although the initial motivation for Fourier Analysis was in the
+          study of the heat equation, it now has applications in electrical
+          engineering, vibration analysis, acoustics, optics, signal processing,
+          image processing, quantum mechanics, econometrics, thin-walled shell
+          theory, etc.
+        </p>
+      </div>
+    </div>
+
+    <div id="real">
+      <div class="container">
+        <h2>Fourier Series on a Real Valued Functions</h2>
+        <p>
+          The most simple application of Fourier series is to find the
+          approximation of a periodic function as a set of sine and cosine
+          waves.
+        </p>
+        <p>
+          The Fourier Series for a periodic function \(f(x)\) with a period
+          \(T\) is
+        </p>
+
+        $$f(x) = \frac{a_0}{2} * \sum_{k=1}^{N}(a_n \cos(\frac{2\pi nx}{T}) +
+        b_n\sin(\frac{2\pi nx}{T}))$$
+
+        <p>
+          for some set of Fourier coefficient \(a_k\) and \(b_k\), defined by
+          integrals
+        </p>
+
+        $$a_n = \frac{2}{T} \int_{0}^{T}f(x) \cos(\frac{2 \pi n x}{T})dx$$ $$
+        b_n= \frac{2}{T} \int_{0}^{T}f(x) \sin(\frac{2 \pi nx}{T})dx $$
+
+        <p>
+          So to compute the fourier series for a given function \(f\), we only
+          need to compute the the set of integrals above for an arbitrary value
+          of \(n\) to get the set of constants for \(a_n\) and \(b_n\).
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="collapse"
+          data-target="#derivation"
+        >
+          Although these integrals and summations may seem daunting at first.
+          With the help of some trignometric identities and Euler's Formula we
+          can make our series easier and more intuitive to understand. If you
+          want to see all of this interesting derivation - check inside this!
+        </button>
+
+        <div id="derivation" class="collapse">
+          As many high school trignometry students learn, sines and cosines can
+          be found by looking at the x and y values of the unit circle. But what
+          they may not know is that by adjusting the radius of the unit circle
+          and making it bigger or smaller we can change the amplitude of our
+          sine and cosine waves. Moreover by adding a value inside our sine and
+          cosine functions we can change the starting angle in our circle and
+          thus change the phase. Finally with Euler's Formula we can make the
+          fourier series calculation and formula remarkably more elegent and
+          efficient and give way to formulas for other fourier analysis
+          equations. Using a trignometric Identity: $$A_n * \cos( \frac{2\pi
+          nx}{T} - \phi_n) = A_n * \cos(\phi_n) * \cos(2\pi nx) + A_n *
+          \sin(\phi_n) * \sin(2\pi nx)$$
+
+          <p>
+            Where in this case \(a_n = A_n * cos(\phi_n)\) and \(b_n = A_n *
+            sin(\phi_n)\). But now you may be asking, ok... we traded 2 annoying
+            constants with 2 different annoying constants. Whats the big deal?
+            In this case \(A_n\) represents the amplitude or how large a circle
+            is and \(\phi_n\) represents the phase or what angle we start off
+            at.
+
+            <br />
+            <br />
+            But now the question remains, how do we get these simpler
+            coefficients? We can get our amplitude with pythagorean theorem, so
+            \(A_n = \sqrt{a_n^2 + b_n^2}\). We can get our phase with the
+            arctanget function so \(\phi_n = \arctan(b_n/a_n)\). So our fourier
+            series function will now look like this:
+          </p>
+
+          $$f(x) = \frac{A_0}{2} + \sum_{n=1}^{N} A_n * \cos( \frac{2\pi nx}{T}
+          - \phi_n)$$
+
+          <p>
+            Finally our final simplification is through the use of Euler's
+            formula \(e^{ix} = \cos(x) + i\sin(x)\). And thus the fourier series
+            has taken an elegent form with complex exponentiation:
+          </p>
+
+          <p>
+            Since \(e^{ix} = \cos(x) + i\sin(x)\) then \(e^{-ix} = \cos(x) +
+            -i\sin(x)\) meaning that \(\cos(x) = \frac{e^{ix} + e^{-ix}}{2}\)
+          </p>
+          <p></p>
+
+          <p>
+            So using this knowledge we know can apply it to our simplified
+            fourier series equations:
+          </p>
+
+          $$ \cos(\frac{2\pi nx}{T} - \phi_n) = \frac{1}{2} e^{i(\frac{2\pi
+          nx}{T} - \phi_n)} + \frac{1}{2} e^{-i(\frac{2\pi nx}{T} - \phi_n)} =
+          \frac{1}{2} * e^{-i * \phi_n} * e^{i * \frac{2\pi nx}{T}} =
+          \frac{1}{2} * e^{i * \phi_n} * e^{i * \frac{2\pi (-n)x}{T}} $$
+
+          <p>
+            Therefore with the definitions for 1 complex constant which is able
+            to encode both amplitude and position we can simplify our
+            calculations.
+          </p>
+
+          $$c_n = \frac{1}{T} \int_{T} f(x) * e^{-i \frac{2\pi nx}{T}}$$
+
+          <p>Finally our fourier series takes a elegent and simple form</p>
+
+          $$f_N(x) = \sum_{n = -N}^{N} c_n * e^{i \frac{2\pi nx}{T}}$$
+
+          <p>
+            Finally to solve for a given functions fourier series we just need
+            to set an arbitrary \(n\) and calcuate the the set of complex
+            constants which we can numerically or analytically integrate. In the
+            most basic cases such as deconstructing a wave we only use the real
+            portion of our fourier series and disregard the complex component.
+            However you will see later the power of using these two components
+            in concert.
+          </p>
+        </div>
+
+        <p>
+          <strong>
+            To use this demonstration create the desired wave by clicking above
+            or below the line. Once the desired outcome is reached click the
+            start button to start the Fourier Series. You can adjust the maximum
+            frequency magnitude if you want to increase or decrease the number
+            of rotating circles based on their frequency. You can also speed up
+            or slow down the demonstration by increasing or decreasing the time
+            scale. If you want to pause the demonstration and adjust your wave,
+            press the pause button.
+          </strong>
+        </p>
+      </div>
+
+      <div id="waveFourier" class="container p-3">
+        <div class="waveForm">
+          <div class="row m-3 justify-content-center">
+            <p class="col-sm-3">Maximum Absolute Frequency</p>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="10"
+              id="waveFrequencySlider"
+              class="custom-range col-sm-5"
+              oninput="change('waveFrequencyText', this.value)"
+            />
+            <input
+              type="number"
+              id="waveFrequencyText"
+              class="col-sm-3 mx-3"
+              value="10"
+              oninput="change('waveFrequencyRange', this.value)"
+            />
+          </div>
+          <div class="row m-3 justify-content-center">
+            <p class="col-sm-3">Time Scale</p>
+            <input
+              type="range"
+              min="0.1"
+              max="10"
+              value="1"
+              step=".1"
+              id="waveTimeSlider"
+              class="custom-range col-sm-5"
+              oninput="change('waveTimeText', this.value)"
+            />
+            <input
+              type="text"
+              id="waveTimeText"
+              class="col-sm-3 mx-3"
+              value="1"
+              oninput="change('waveTimeSlider', this.value)"
+            />
+          </div>
+          <div id="waveSubmit" class="row m-3"></div>
+        </div>
+
+        <div id="waveSketch" class="row p-3 justify-content-center"></div>
+      </div>
+    </div>
+
+    <div class="complex">
+      <div class="complexFourierInfo" class="container">
+        <h2>Fourier Series on a Complex Functions</h2>
+        <p>
+          In the last step of our fourier series derivation we were able to
+          simplify our fourier series calculation to a simple complex
+          exponential:
+        </p>
+
+        $$f_N(x) = \sum_{n = -N}^{N} c_n * e^{i \frac{2\pi nx}{T}}$$ $$c_n =
+        \frac{1}{T} \int_{T} f(x) * e^{-i \frac{2\pi nx}{T}}$$
+
+        <p>
+          In a simple wave deconstruction problem we only need to use the real
+          portion of the complex exponential. However we can represent a 2
+          dimensional shape as a complex periodic function and thus find the
+          fourier series for the path using both real and complex components of
+          the complex exponential.
+        </p>
+      </div>
+
+      <div id="complexFourier" class="container p-3">
+        <div class="row m-3 justify-content-center">
+          <p class="col-sm-3">Maximum Absolute Frequency</p>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="10"
+            id="FrequencySlider"
+            class="custom-range col-sm-5"
+            oninput="change('FrequencyText', this.value)"
+          />
+          <input
+            type="number"
+            id="FrequencyText"
+            class="col-sm-3 mx-3"
+            value="10"
+            oninput="change('FrequencySlider', this.value)"
+          />
+        </div>
+        <div class="row m-3 justify-content-center">
+          <p class="col-sm-3">Time Scale</p>
+          <input
+            type="range"
+            min="0.1"
+            max="10"
+            value="1"
+            step=".1"
+            id="TimeSlider"
+            class="custom-range col-sm-5"
+            oninput="change('TimeText', this.value)"
+          />
+          <input
+            type="text"
+            id="TimeText"
+            class="col-sm-3 mx-3"
+            value="1"
+            oninput="change('TimeSlider', this.value)"
+          />
+        </div>
+        <div id="csubmit" class="row m-3 justify-content-center"></div>
+        <div id="pathViewer" class="row m-3 justify-content-center"></div>
+      </div>
+
+      <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+          var fileName = $(this).val().split("\\").pop();
+          $(this)
+            .siblings(".custom-file-label")
+            .addClass("selected")
+            .html(fileName);
+        });
+      </script>
+
+      <div id="sketch" class="row p-3 justify-content-center"></div>
+    </div>
+
+    <div id="code" class="container">
+      <h2>Analyzing my implementation</h2>
+      <p>
+        Most of the basic mathematical heavylifting is done by the
+        <strong>Complex</strong> class. Where some basic operations were
+        outlined such as adding and multiplying. However the implementation is
+        relatively self explanatory and is pretty bland. But the fun happens in
+        the <strong>FourierEpicycles</strong> class.
+      </p>
+
+      <pre>
+        <code >
+          class FourierEpicycles{}
+        </code>
+      </pre>
+
+      <xmp>
+        class FourierEpicycles{}
+      </xmp>
+      
+    </div>
+
+    <div class="More-Info">
+      <div class="container justify-content-center">
+        <h2>More Information</h2>
+        <p>
+          I hope this demonstration provided about effective overview about
+          Fourier Series. For more information please view these resources:
+        </p>
+        <p>
+          Primarily, this project was inspired by 3Blue1Brown's video about
+          fourier series. For more information about the math and the
+          applications of the Fourier Series and Fourier Analysis this is the
+          best video.
+        </p>
+        <div class="mb-4">
+          <iframe
+            width="700"
+            height="394"
+            src="https://www.youtube.com/embed/r6sGWTCMz2k"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <p>
+          Another really interesting resource was
+          <a href="http://www.jezzamon.com/fourier/">
+            Jez Swanson's an Interactive Introduction to Fourier Transforms
+          </a>
+          which has its own epicycle demonstrations and some other cool
+          applications for fourier analysis. Both of these resources served as
+          massive inspirations for this project and massive sources of
+          information. If you want to see the derivation for the fourier series
+          in more detail check out the
+          <a
+            href="https://en.wikipedia.org/wiki/Fourier_series#Complex-valued_functions"
+          >
+            Fourier Series wikipedia article
+          </a>
+          . For any one looking to learn more about Fourier Analysis these
+          resources are great starting points.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      change = (id, value) => {
+        document.getElementById(id).value = value;
+      };
+    </script>
+    <style>
+      iframe {
+        display: block;
+        margin: 0 auto;
+      }
+    
+    </style>
+  </body>
+</html>
